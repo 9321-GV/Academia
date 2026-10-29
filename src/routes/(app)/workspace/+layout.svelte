@@ -87,6 +87,11 @@
 			) {
 				goto('/', { replaceState: true });
 			} else if (
+				$page.url.pathname.includes('/study-practice') &&
+				!$user?.permissions?.workspace?.knowledge
+			) {
+				goto('/', { replaceState: true });
+			} else if (
 				$page.url.pathname.includes('/prompts') &&
 				!$user?.permissions?.workspace?.prompts
 			) {
@@ -179,6 +184,20 @@
 								<span class="text-sm opacity-60">
 									{formatCount($workspaceCounts.knowledge)}
 								</span>
+							</a>
+						{/if}
+
+						{#if $user?.role === 'admin' || $user?.permissions?.workspace?.knowledge}
+							<a
+								draggable="false"
+								aria-current={activeWorkspaceSection === 'study-practice' ? 'page' : null}
+								class="min-w-fit px-1 text-sm inline-flex items-center gap-1 {activeWorkspaceSection ===
+								'study-practice'
+									? 'text-gray-900 dark:text-gray-100'
+									: 'text-gray-300 dark:text-gray-600 hover:text-gray-700 dark:hover:text-white'} transition select-none"
+								href="/workspace/study-practice"
+							>
+								<span>{$i18n.t('Study Practice')}</span>
 							</a>
 						{/if}
 

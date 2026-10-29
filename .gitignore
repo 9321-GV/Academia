@@ -311,3 +311,4 @@ cypress/videos
 cypress/screenshots
 .vscode/settings.json
 .cptr
+.webui_secret_key
