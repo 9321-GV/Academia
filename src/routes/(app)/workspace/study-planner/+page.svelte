@@ -203,8 +203,10 @@
 	<title>{$i18n.t('AI Study Planner')} / {$i18n.t('Workspace')}</title>
 </svelte:head>
 
-<div class="mx-auto flex w-full max-w-5xl flex-col gap-6 py-5 md:py-8">
-	<header class="border-b border-gray-200 pb-5 dark:border-gray-800">
+<div
+	class="academia-page academia-planner-page mx-auto flex w-full max-w-5xl flex-col gap-6 py-5 md:py-8"
+>
+	<header class="academia-page-header academia-glass-panel rounded-2xl p-5 sm:p-6">
 		<p class="mb-1 text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
 			{$i18n.t('Academia')}
 		</p>
@@ -218,8 +220,11 @@
 		</p>
 	</header>
 
-	<form class="flex flex-col gap-6" on:submit|preventDefault={generatePlan}>
-		<section class="flex flex-col gap-4" aria-labelledby="planner-subjects-heading">
+	<form class="flex flex-col gap-5" on:submit|preventDefault={generatePlan}>
+		<section
+			class="academia-glass-panel flex flex-col gap-4 rounded-2xl p-5 sm:p-6"
+			aria-labelledby="planner-subjects-heading"
+		>
 			<div class="flex items-center justify-between gap-3">
 				<div>
 					<h2
@@ -244,7 +249,7 @@
 
 			{#each subjects as subject, index (index)}
 				<fieldset
-					class="grid gap-3 rounded-xl border border-gray-200 p-4 dark:border-gray-800 md:grid-cols-2"
+					class="academia-subject-card grid gap-3 rounded-xl border border-gray-200 p-4 md:grid-cols-2"
 				>
 					<legend class="sr-only">{$i18n.t('Subject {{number}}', { number: index + 1 })}</legend>
 					<label class="text-sm" for={`planner-subject-${index}`}>
@@ -318,7 +323,7 @@
 			{/each}
 		</section>
 
-		<section class="grid gap-5 border-t border-gray-200 pt-5 dark:border-gray-800 md:grid-cols-2">
+		<section class="academia-glass-panel grid gap-5 rounded-2xl p-5 md:grid-cols-2 sm:p-6">
 			<div class="flex flex-col gap-4">
 				<h2 class="text-base font-medium text-gray-900 dark:text-gray-100">
 					{$i18n.t('Study availability')}
@@ -466,14 +471,14 @@
 			</div>
 		</section>
 
-		<div class="flex flex-col gap-3 border-t border-gray-200 pt-5 dark:border-gray-800">
+		<div class="flex flex-col gap-3">
 			{#if availableModels.length === 0}
 				<p class="text-sm text-amber-700 dark:text-amber-400" role="status">
 					{$i18n.t('No available models were found.')}
 				</p>
 			{/if}
 			<button
-				class="inline-flex min-h-10 items-center justify-center self-start rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-700 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-100 dark:text-gray-900"
+				class="academia-primary-button inline-flex min-h-10 items-center justify-center self-start rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-700 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-100 dark:text-gray-900"
 				type="submit"
 				disabled={generating || availableModels.length === 0}
 				aria-busy={generating}
@@ -484,7 +489,7 @@
 	</form>
 
 	<section
-		class="border-t border-gray-200 pt-5 dark:border-gray-800"
+		class="academia-glass-panel rounded-2xl p-5 sm:p-6"
 		aria-live="polite"
 		aria-busy={generating}
 	>
@@ -521,7 +526,7 @@
 				{/if}
 				<div class="grid gap-4 md:grid-cols-2">
 					{#each plan.days as day (day.date)}
-						<article class="rounded-xl border border-gray-200 p-4 dark:border-gray-800">
+						<article class="academia-plan-day rounded-xl border p-4">
 							<h3 class="mb-3 font-medium text-gray-900 dark:text-gray-100">
 								{new Date(`${day.date}T00:00:00`).toLocaleDateString(undefined, {
 									weekday: 'long',
@@ -536,7 +541,15 @@
 							{:else}
 								<ol class="flex flex-col gap-2">
 									{#each day.sessions as session, index (`${day.date}-${index}`)}
-										<li class="rounded-lg border p-3 {sessionStyles[session.type]}">
+										<li
+											class="academia-plan-session rounded-lg border p-3 {sessionStyles[
+												session.type
+											]}"
+											class:session-study={session.type === 'study'}
+											class:session-revision={session.type === 'revision'}
+											class:session-practice={session.type === 'practice'}
+											class:session-break={session.type === 'break'}
+										>
 											<div class="flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
 												<span
 													class="text-xs font-medium uppercase tracking-wide text-gray-600 dark:text-gray-300"

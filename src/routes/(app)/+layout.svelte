@@ -1,4 +1,5 @@
 <script lang="ts">
+	import '$lib/styles/academia.css';
 	import { toast } from 'svelte-sonner';
 	import { onMount, tick, getContext } from 'svelte';
 
@@ -51,6 +52,11 @@
 	const i18n = getContext('i18n');
 
 	let loaded = false;
+	$: isAcademiaSurface =
+		$page.url.pathname === '/' ||
+		$page.url.pathname.startsWith('/c/') ||
+		$page.url.pathname === '/workspace' ||
+		$page.url.pathname.startsWith('/workspace/');
 
 	let version;
 	let handledSettingsUrl = '';
@@ -438,7 +444,7 @@
 {/if}
 
 {#if $user}
-	<div class="app relative">
+	<div class="app relative" class:academia-app={isAcademiaSurface}>
 		<div
 			class=" text-gray-700 dark:text-gray-100 bg-white dark:bg-gray-900 h-screen max-h-[100dvh] overflow-auto flex flex-row justify-end"
 		>

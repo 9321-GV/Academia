@@ -172,8 +172,10 @@
 	<title>{$i18n.t('PDF Summarizer')} / {$i18n.t('Workspace')}</title>
 </svelte:head>
 
-<div class="mx-auto flex w-full max-w-5xl flex-col gap-6 py-5 md:py-8">
-	<header class="border-b border-gray-200 pb-5 dark:border-gray-800">
+<div
+	class="academia-page academia-pdf-page mx-auto flex w-full max-w-5xl flex-col gap-6 py-5 md:py-8"
+>
+	<header class="academia-page-header academia-glass-panel rounded-2xl p-5 sm:p-6">
 		<p class="mb-1 text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
 			{$i18n.t('Academia')}
 		</p>
@@ -185,13 +187,16 @@
 		</p>
 	</header>
 
-	<section class="grid gap-6 md:grid-cols-2" aria-labelledby="pdf-source-heading">
+	<section
+		class="academia-glass-panel grid gap-6 rounded-2xl p-5 md:grid-cols-2 sm:p-6"
+		aria-labelledby="pdf-source-heading"
+	>
 		<div class="flex flex-col gap-4">
 			<h2 id="pdf-source-heading" class="text-base font-medium text-gray-900 dark:text-gray-100">
 				{$i18n.t('Choose a PDF')}
 			</h2>
 			<div
-				class="rounded-xl border-2 border-dashed p-5 text-center transition-colors {dragOver
+				class="academia-pdf-dropzone rounded-xl border-2 border-dashed p-5 text-center transition-colors {dragOver
 					? 'border-gray-700 bg-gray-50 dark:border-gray-300 dark:bg-gray-800'
 					: 'border-gray-300 dark:border-gray-700'}"
 				ondragover={(event) => {
@@ -224,7 +229,7 @@
 						{selectedUpload.name}
 					</p>
 					<button
-						class="mt-3 rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-700 disabled:opacity-50 dark:bg-gray-100 dark:text-gray-900"
+						class="academia-primary-button mt-3 rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-700 disabled:opacity-50 dark:bg-gray-100 dark:text-gray-900"
 						type="button"
 						disabled={uploading}
 						aria-busy={uploading}
@@ -311,7 +316,7 @@
 				</p>
 			{/if}
 			<button
-				class="inline-flex min-h-10 items-center justify-center rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-700 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-100 dark:text-gray-900"
+				class="academia-primary-button inline-flex min-h-10 items-center justify-center rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-700 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-100 dark:text-gray-900"
 				type="button"
 				disabled={generating || uploading || !selectedPdfId || !selectedModelId}
 				aria-busy={generating}
@@ -323,7 +328,7 @@
 	</section>
 
 	<section
-		class="border-t border-gray-200 pt-5 dark:border-gray-800"
+		class="academia-glass-panel min-h-24 rounded-2xl p-5 sm:p-6"
 		aria-live="polite"
 		aria-busy={generating}
 	>
@@ -334,7 +339,7 @@
 		{:else if generationError}
 			<p class="text-sm text-red-600 dark:text-red-400" role="alert">{generationError}</p>
 		{:else if summary}
-			<article class="flex flex-col gap-6">
+			<article class="academia-summary-output flex flex-col gap-6">
 				<header>
 					<h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100">
 						{$i18n.t('Academic summary')}

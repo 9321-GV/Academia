@@ -39,7 +39,8 @@
 		loadWorkspaceCounts();
 	}
 
-	$: activeWorkspaceSection = $page.url.pathname.split('/')[2] ?? '';
+	$: activeWorkspaceSection =
+		$page.url.pathname === '/workspace' ? 'dashboard' : ($page.url.pathname.split('/')[2] ?? '');
 	$: visibleActions = $workspaceActions.filter((action) => action.visible ?? true);
 
 	const getCount = (res: any) => res?.total ?? (Array.isArray(res) ? res.length : null);
@@ -131,11 +132,13 @@
 
 {#if loaded}
 	<div
-		class="flex flex-col flex-1 min-w-0 w-full h-screen max-h-[100dvh] transition-width duration-200 ease-in-out {$showSidebar
+		class="academia-workspace-layout flex flex-col flex-1 min-w-0 w-full h-screen max-h-[100dvh] transition-width duration-200 ease-in-out {$showSidebar
 			? 'md:max-w-[calc(100%-var(--sidebar-width))]'
 			: 'md:max-w-[calc(100%-42px)]'} max-w-full"
 	>
-		<nav class="pb-1 px-2.5 pt-2 backdrop-blur-xl drag-region select-none">
+		<nav
+			class="academia-workspace-topnav pb-1 px-2.5 pt-2 backdrop-blur-xl drag-region select-none"
+		>
 			<div class="flex items-center gap-0.5 md:gap-1">
 				{#if $mobile}
 					<div class="{$showSidebar ? 'md:hidden' : ''} self-center flex flex-none items-center">
@@ -163,6 +166,18 @@
 					<div
 						class="flex min-w-0 mr-1.5 items-center gap-0.5 md:gap-1 scrollbar-none overflow-x-auto w-fit text-center text-sm font-normal rounded-full bg-transparent py-1 touch-auto pointer-events-auto"
 					>
+						<a
+							draggable="false"
+							aria-current={activeWorkspaceSection === 'dashboard' ? 'page' : null}
+							class="min-w-fit px-1 text-sm inline-flex items-center gap-1 {activeWorkspaceSection ===
+							'dashboard'
+								? 'text-gray-900 dark:text-gray-100'
+								: 'text-gray-300 dark:text-gray-600 hover:text-gray-700 dark:hover:text-white'} transition select-none"
+							href="/workspace"
+						>
+							<span>{$i18n.t('Dashboard')}</span>
+						</a>
+
 						{#if $user?.role === 'admin' || $user?.permissions?.workspace?.models}
 							<a
 								draggable="false"
@@ -301,7 +316,7 @@
 		</nav>
 
 		<div
-			class="  pb-1 px-3 flex-1 min-w-0 max-h-full overflow-y-auto overflow-x-hidden"
+			class="academia-workspace-content pb-1 px-3 flex-1 min-w-0 max-h-full overflow-y-auto overflow-x-hidden"
 			id="workspace-container"
 		>
 			<slot />

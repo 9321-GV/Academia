@@ -388,6 +388,7 @@
 										message.files ? 'rounded-tr-lg' : ''
 									}`
 								: ' w-full'}"
+							class:academia-user-bubble={$settings?.chatBubble ?? true}
 						>
 							{#if message.content}
 								{#if $settings?.renderMarkdownInUserMessages ?? true}

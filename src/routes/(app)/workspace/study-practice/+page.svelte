@@ -42,8 +42,13 @@
 	let practiceSources: StudySource[] = [];
 	let mcqQuiz: McqQuizState = createMcqQuizState();
 
-	$: availableModels = ($availableModelsStore ?? []).filter((model) => !(model?.info?.meta?.hidden ?? false));
-	$: if (availableModels.length > 0 && !availableModels.some((model) => model.id === selectedModelId)) {
+	$: availableModels = ($availableModelsStore ?? []).filter(
+		(model) => !(model?.info?.meta?.hidden ?? false)
+	);
+	$: if (
+		availableModels.length > 0 &&
+		!availableModels.some((model) => model.id === selectedModelId)
+	) {
 		const defaultModelId = ($config?.default_models ?? '').split(',')[0]?.trim();
 		selectedModelId = availableModels.some((model) => model.id === defaultModelId)
 			? defaultModelId
@@ -137,7 +142,7 @@
 				model: selectedModelId,
 				stream: false,
 				params: request.params,
-				messages: request.messages,
+				messages: request.messages
 			});
 			const content = response?.choices?.[0]?.message?.content;
 			if (typeof content !== 'string' || !content.trim()) {
@@ -169,8 +174,10 @@
 	<title>{$i18n.t('Study Practice')} / {$i18n.t('Workspace')}</title>
 </svelte:head>
 
-<div class="mx-auto flex w-full max-w-5xl flex-col gap-6 py-5 md:py-8">
-	<header class="border-b border-gray-200 pb-5 dark:border-gray-800">
+<div
+	class="academia-page academia-practice-page mx-auto flex w-full max-w-5xl flex-col gap-6 py-5 md:py-8"
+>
+	<header class="academia-page-header academia-glass-panel rounded-2xl p-5 sm:p-6">
 		<h1 class="text-2xl font-semibold text-gray-900 dark:text-gray-100">
 			{$i18n.t('Study Practice Generator')}
 		</h1>
@@ -179,15 +186,23 @@
 		</p>
 	</header>
 
-	<section aria-labelledby="study-practice-settings" class="grid gap-5 md:grid-cols-2">
+	<section
+		aria-labelledby="study-practice-settings"
+		class="academia-glass-panel grid gap-5 rounded-2xl p-5 md:grid-cols-2 sm:p-6"
+	>
 		<div class="flex min-w-0 flex-col gap-4">
-			<h2 id="study-practice-settings" class="text-base font-medium text-gray-900 dark:text-gray-100">
+			<h2
+				id="study-practice-settings"
+				class="text-base font-medium text-gray-900 dark:text-gray-100"
+			>
 				{$i18n.t('Study material')}
 			</h2>
 
 			<form class="flex items-end gap-2" on:submit|preventDefault={loadCollections}>
 				<label class="min-w-0 flex-1 text-sm" for="knowledge-search">
-					<span class="mb-1.5 block text-gray-700 dark:text-gray-300">{$i18n.t('Search collections')}</span>
+					<span class="mb-1.5 block text-gray-700 dark:text-gray-300"
+						>{$i18n.t('Search collections')}</span
+					>
 					<input
 						id="knowledge-search"
 						class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 outline-hidden focus:border-gray-500 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100"
@@ -205,7 +220,9 @@
 			</form>
 
 			<label class="text-sm" for="knowledge-collection">
-				<span class="mb-1.5 block text-gray-700 dark:text-gray-300">{$i18n.t('Knowledge collection')}</span>
+				<span class="mb-1.5 block text-gray-700 dark:text-gray-300"
+					>{$i18n.t('Knowledge collection')}</span
+				>
 				<select
 					id="knowledge-collection"
 					class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 outline-hidden focus:border-gray-500 disabled:opacity-60 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100"
@@ -220,7 +237,9 @@
 			</label>
 
 			{#if collectionLoading}
-				<p class="text-sm text-gray-500" role="status">{$i18n.t('Loading Knowledge collections...')}</p>
+				<p class="text-sm text-gray-500" role="status">
+					{$i18n.t('Loading Knowledge collections...')}
+				</p>
 			{:else if collectionError}
 				<p class="text-sm text-red-600 dark:text-red-400" role="alert">{collectionError}</p>
 			{:else if collections.length === 0}
@@ -235,9 +254,13 @@
 
 		<div class="flex min-w-0 flex-col gap-4">
 			<fieldset>
-				<legend class="mb-2 text-sm text-gray-700 dark:text-gray-300">{$i18n.t('Practice mode')}</legend>
+				<legend class="mb-2 text-sm text-gray-700 dark:text-gray-300"
+					>{$i18n.t('Practice mode')}</legend
+				>
 				<div class="grid grid-cols-2 rounded-lg border border-gray-300 p-1 dark:border-gray-700">
-					<label class="flex cursor-pointer items-center justify-center gap-2 rounded-md px-2 py-2 text-sm hover:bg-gray-50 dark:hover:bg-gray-800">
+					<label
+						class="flex cursor-pointer items-center justify-center gap-2 rounded-md px-2 py-2 text-sm hover:bg-gray-50 dark:hover:bg-gray-800"
+					>
 						<input
 							class="accent-gray-900 dark:accent-gray-100"
 							type="radio"
@@ -248,7 +271,9 @@
 						/>
 						<span>{$i18n.t('MCQ Practice')}</span>
 					</label>
-					<label class="flex cursor-pointer items-center justify-center gap-2 rounded-md px-2 py-2 text-sm hover:bg-gray-50 dark:hover:bg-gray-800">
+					<label
+						class="flex cursor-pointer items-center justify-center gap-2 rounded-md px-2 py-2 text-sm hover:bg-gray-50 dark:hover:bg-gray-800"
+					>
 						<input
 							class="accent-gray-900 dark:accent-gray-100"
 							type="radio"
@@ -276,7 +301,9 @@
 
 			<div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
 				<label class="text-sm" for="question-count">
-					<span class="mb-1.5 block text-gray-700 dark:text-gray-300">{$i18n.t('Number of questions')}</span>
+					<span class="mb-1.5 block text-gray-700 dark:text-gray-300"
+						>{$i18n.t('Number of questions')}</span
+					>
 					<input
 						id="question-count"
 						class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 outline-hidden focus:border-gray-500 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100"
@@ -304,38 +331,60 @@
 			</div>
 
 			<button
-				class="inline-flex min-h-10 items-center justify-center rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-700 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-100 dark:text-gray-900 dark:hover:bg-white"
+				class="academia-primary-button inline-flex min-h-10 items-center justify-center rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-700 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-100 dark:text-gray-900 dark:hover:bg-white"
 				type="button"
-				disabled={generating || !topic.trim() || !selectedCollectionId || !selectedModelId || !Number.isInteger(questionCount) || questionCount < 1 || questionCount > 10}
+				disabled={generating ||
+					!topic.trim() ||
+					!selectedCollectionId ||
+					!selectedModelId ||
+					!Number.isInteger(questionCount) ||
+					questionCount < 1 ||
+					questionCount > 10}
 				aria-busy={generating}
 				on:click={generatePractice}
 			>
 				{generating ? $i18n.t('Generating questions...') : $i18n.t('Generate study practice')}
 			</button>
 			{#if availableModels.length === 0}
-				<p class="text-sm text-amber-700 dark:text-amber-400" role="status">{$i18n.t('No available models were found.')}</p>
+				<p class="text-sm text-amber-700 dark:text-amber-400" role="status">
+					{$i18n.t('No available models were found.')}
+				</p>
 			{/if}
 		</div>
 	</section>
 
-	<section class="border-t border-gray-200 pt-5 dark:border-gray-800" aria-live="polite" aria-busy={generating}>
+	<section
+		class="academia-glass-panel rounded-2xl p-5 sm:p-6"
+		aria-live="polite"
+		aria-busy={generating}
+	>
 		{#if generating}
-			<p class="text-sm text-gray-600 dark:text-gray-400" role="status">{$i18n.t('Retrieving material and generating questions...')}</p>
+			<p class="text-sm text-gray-600 dark:text-gray-400" role="status">
+				{$i18n.t('Retrieving material and generating questions...')}
+			</p>
 		{:else if generationError}
 			<p class="text-sm text-red-600 dark:text-red-400" role="alert">{generationError}</p>
 		{:else if insufficientMaterial}
 			<div class="max-w-2xl">
-				<h2 class="text-base font-medium text-gray-900 dark:text-gray-100">{$i18n.t('Insufficient study material')}</h2>
+				<h2 class="text-base font-medium text-gray-900 dark:text-gray-100">
+					{$i18n.t('Insufficient study material')}
+				</h2>
 				<p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
-					{$i18n.t('No sufficiently relevant excerpts were found for this topic. Try a broader topic or another collection.')}
+					{$i18n.t(
+						'No sufficiently relevant excerpts were found for this topic. Try a broader topic or another collection.'
+					)}
 				</p>
 			</div>
 		{:else if practice}
 			<div class="flex flex-col gap-4">
 				<div>
-					<h2 class="text-base font-medium text-gray-900 dark:text-gray-100">{$i18n.t('Practice questions')}</h2>
+					<h2 class="text-base font-medium text-gray-900 dark:text-gray-100">
+						{$i18n.t('Practice questions')}
+					</h2>
 					<p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-						{$i18n.t('Grounded in retrieved excerpts from {{count}} source(s).', { count: practiceSources.length })}
+						{$i18n.t('Grounded in retrieved excerpts from {{count}} source(s).', {
+							count: practiceSources.length
+						})}
 					</p>
 				</div>
 
@@ -343,7 +392,7 @@
 					<ol class="flex flex-col gap-4">
 						{#each practice.items as question, questionIndex (questionIndex)}
 							{@const selectedOption = mcqQuiz.selectedAnswers[questionIndex]}
-							<li class="border-b border-gray-200 pb-4 dark:border-gray-800">
+							<li class="academia-quiz-question rounded-xl border border-white/10 p-4">
 								<fieldset>
 									<legend class="font-medium text-gray-900 dark:text-gray-100">
 										{questionIndex + 1}. {question.question}
@@ -353,9 +402,19 @@
 											{@const optionId = `study-mcq-${questionIndex}-${optionIndex}`}
 											<label
 												for={optionId}
-												class="flex min-h-10 cursor-pointer items-center gap-2 rounded-lg border px-3 py-2 transition-colors {selectedOption === optionIndex
+												class="academia-answer-option flex min-h-10 cursor-pointer items-center gap-2 rounded-lg border px-3 py-2 transition-colors {selectedOption ===
+												optionIndex
 													? 'border-gray-800 bg-gray-100 font-medium dark:border-gray-300 dark:bg-gray-800'
-													: 'border-gray-200 hover:bg-gray-50 dark:border-gray-800 dark:hover:bg-gray-850'} {mcqQuiz.submitted ? 'cursor-default' : ''}"
+													: 'border-gray-200 hover:bg-gray-50 dark:border-gray-800 dark:hover:bg-gray-850'} {mcqQuiz.submitted
+													? 'cursor-default'
+													: ''}"
+												class:academia-answer-selected={!mcqQuiz.submitted &&
+													selectedOption === optionIndex}
+												class:academia-answer-correct={mcqQuiz.submitted &&
+													optionIndex === question.correct_option}
+												class:academia-answer-incorrect={mcqQuiz.submitted &&
+													selectedOption === optionIndex &&
+													selectedOption !== question.correct_option}
 											>
 												<input
 													id={optionId}
@@ -374,26 +433,37 @@
 									</div>
 								</fieldset>
 								<p class="mt-2 text-xs text-gray-500 dark:text-gray-400">
-									{$i18n.t('Sources')}: {question.source_indices.map((index) => formatStudySourceLabel(practiceSources[index - 1], index)).join('; ')}
+									{$i18n.t('Sources')}: {question.source_indices
+										.map((index) => formatStudySourceLabel(practiceSources[index - 1], index))
+										.join('; ')}
 								</p>
 								{#if mcqQuiz.submitted}
-									<div class="mt-3 flex flex-col gap-1 text-sm" id={`study-mcq-feedback-${questionIndex}`}>
+									<div
+										class="mt-3 flex flex-col gap-1 text-sm"
+										id={`study-mcq-feedback-${questionIndex}`}
+									>
 										{#if selectedOption === undefined}
 											<p class="font-medium text-gray-800 dark:text-gray-200">
 												{$i18n.t('Not answered; counted as incorrect.')}
 											</p>
 										{:else if selectedOption === question.correct_option}
 											<p class="font-medium text-green-800 dark:text-green-300">
-												{$i18n.t('Correct. Your answer: {{answer}}.', { answer: `${String.fromCharCode(65 + selectedOption)}. ${question.options[selectedOption]}` })}
+												{$i18n.t('Correct. Your answer: {{answer}}.', {
+													answer: `${String.fromCharCode(65 + selectedOption)}. ${question.options[selectedOption]}`
+												})}
 											</p>
 										{:else}
 											<p class="font-medium text-red-800 dark:text-red-300">
-												{$i18n.t('Incorrect. Your answer: {{answer}}.', { answer: `${String.fromCharCode(65 + selectedOption)}. ${question.options[selectedOption]}` })}
+												{$i18n.t('Incorrect. Your answer: {{answer}}.', {
+													answer: `${String.fromCharCode(65 + selectedOption)}. ${question.options[selectedOption]}`
+												})}
 											</p>
 										{/if}
 										<p class="text-gray-700 dark:text-gray-300">
 											<strong>{$i18n.t('Correct answer')}:</strong>
-											{String.fromCharCode(65 + question.correct_option)}. {question.options[question.correct_option]}
+											{String.fromCharCode(65 + question.correct_option)}. {question.options[
+												question.correct_option
+											]}
 										</p>
 										<p class="text-gray-600 dark:text-gray-400">{question.explanation}</p>
 									</div>
@@ -403,7 +473,11 @@
 					</ol>
 					{#if mcqQuiz.submitted && mcqQuiz.score}
 						<div class="flex flex-col gap-2 border-t border-gray-200 pt-4 dark:border-gray-800">
-							<p class="text-base font-semibold text-gray-900 dark:text-gray-100" role="status" aria-live="polite">
+							<p
+								class="text-base font-semibold text-gray-900 dark:text-gray-100"
+								role="status"
+								aria-live="polite"
+							>
 								{$i18n.t('{{correct}} / {{total}} correct ({{percentage}}%).', {
 									correct: mcqQuiz.score.correct,
 									total: mcqQuiz.score.total,
@@ -412,7 +486,9 @@
 							</p>
 							{#if mcqQuiz.score.unanswered > 0}
 								<p class="text-sm text-gray-600 dark:text-gray-400">
-									{$i18n.t('{{count}} unanswered, counted as incorrect.', { count: mcqQuiz.score.unanswered })}
+									{$i18n.t('{{count}} unanswered, counted as incorrect.', {
+										count: mcqQuiz.score.unanswered
+									})}
 								</p>
 							{/if}
 							<button
@@ -425,7 +501,7 @@
 						</div>
 					{:else}
 						<button
-							class="mt-2 w-fit rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-700 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-100 dark:text-gray-900 dark:hover:bg-white"
+							class="academia-primary-button mt-2 w-fit rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-700 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-100 dark:text-gray-900 dark:hover:bg-white"
 							type="button"
 							disabled={mcqQuiz.submitted || practice.items.length === 0}
 							on:click={submitMcqAnswers}
@@ -436,16 +512,24 @@
 				{:else}
 					<ol class="flex flex-col gap-4">
 						{#each practice.items as question, questionIndex (questionIndex)}
-							<li class="border-b border-gray-200 pb-4 dark:border-gray-800">
-								<h3 class="font-medium text-gray-900 dark:text-gray-100">{questionIndex + 1}. {question.question}</h3>
+							<li class="academia-quiz-question rounded-xl border border-white/10 p-4">
+								<h3 class="font-medium text-gray-900 dark:text-gray-100">
+									{questionIndex + 1}. {question.question}
+								</h3>
 								<p class="mt-2 text-xs text-gray-500 dark:text-gray-400">
-									{$i18n.t('Sources')}: {question.source_indices.map((index) => formatStudySourceLabel(practiceSources[index - 1], index)).join('; ')}
+									{$i18n.t('Sources')}: {question.source_indices
+										.map((index) => formatStudySourceLabel(practiceSources[index - 1], index))
+										.join('; ')}
 								</p>
 								<details class="mt-3 text-sm">
-									<summary class="w-fit cursor-pointer font-medium text-gray-800 underline underline-offset-2 dark:text-gray-200">
+									<summary
+										class="w-fit cursor-pointer font-medium text-gray-800 underline underline-offset-2 dark:text-gray-200"
+									>
 										{$i18n.t('Show model answer')}
 									</summary>
-									<p class="mt-2 whitespace-pre-wrap text-gray-700 dark:text-gray-300">{question.answer}</p>
+									<p class="mt-2 whitespace-pre-wrap text-gray-700 dark:text-gray-300">
+										{question.answer}
+									</p>
 								</details>
 							</li>
 						{/each}
@@ -453,7 +537,9 @@
 				{/if}
 
 				<details class="text-sm">
-					<summary class="w-fit cursor-pointer font-medium text-gray-700 underline underline-offset-2 dark:text-gray-300">
+					<summary
+						class="w-fit cursor-pointer font-medium text-gray-700 underline underline-offset-2 dark:text-gray-300"
+					>
 						{$i18n.t('Retrieved sources')}
 					</summary>
 					<ul class="mt-2 flex flex-col gap-1 text-gray-600 dark:text-gray-400">
@@ -464,7 +550,9 @@
 				</details>
 			</div>
 		{:else}
-			<p class="text-sm text-gray-500 dark:text-gray-400">{$i18n.t('Choose a Knowledge collection and topic to begin.')}</p>
+			<p class="text-sm text-gray-500 dark:text-gray-400">
+				{$i18n.t('Choose a Knowledge collection and topic to begin.')}
+			</p>
 		{/if}
 	</section>
 </div>
