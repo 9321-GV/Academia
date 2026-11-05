@@ -1176,6 +1176,8 @@
 	"The model response did not match the expected study plan format.": "The model response did not match the expected study plan format.",
 	"The model returned a day with an invalid date or too many sessions.": "The model returned a day with an invalid date or too many sessions.",
 	"The study plan includes a date outside your selected planning days.": "The study plan includes a date outside your selected planning days.",
+	"A study session was scheduled on an unselected weekday: {{weekday}} {{date}}. Selected weekday values: {{selectedDays}}. Sessions: {{sessions}}.": "A study session was scheduled on an unselected weekday: {{weekday}} {{date}}. Selected weekday values: {{selectedDays}}. Sessions: {{sessions}}.",
+	"The model could not produce a valid schedule after one correction attempt. {{details}}": "The model could not produce a valid schedule after one correction attempt. {{details}}",
 	"The study plan does not include exactly the available study days.": "The study plan does not include exactly the available study days.",
 	"The study plan contains a duplicate date.": "The study plan contains a duplicate date.",
 	"The model returned an invalid study session.": "The model returned an invalid study session.",

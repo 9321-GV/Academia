@@ -11,6 +11,9 @@
 		generateStudyPlan,
 		MAX_STUDY_PLAN_DAYS,
 		removePlannerSubject,
+		STUDY_WEEKDAY_NAMES,
+		StudyPlanCorrectionError,
+		UnselectedStudyWeekdayError,
 		type PlannerSubject,
 		type StudyIntensity,
 		type StudyPlannerInput,
@@ -31,15 +34,7 @@
 		const localDate = new Date(result.getTime() - result.getTimezoneOffset() * 60000);
 		return localDate.toISOString().slice(0, 10);
 	};
-	const weekdayLabels = [
-		'Sunday',
-		'Monday',
-		'Tuesday',
-		'Wednesday',
-		'Thursday',
-		'Friday',
-		'Saturday'
-	];
+	const weekdayLabels = STUDY_WEEKDAY_NAMES;
 	const sessionLabels: Record<StudySessionType, string> = {
 		study: 'Study',
 		revision: 'Revision',
@@ -117,23 +112,53 @@
 		}
 
 		const input = plannerInput();
+		input.studyDays = [...input.studyDays];
+		input.subjects = input.subjects.map((subject) => ({ ...subject }));
 		try {
 			generating = true;
-			plan = await generateStudyPlan(input, async (messages, maxTokens) => {
-				const response = await generateOpenAIChatCompletion(localStorage.token, {
-					model: selectedModelId,
-					stream: false,
-					params: { temperature: 0.3, max_tokens: maxTokens },
-					messages
-				});
-				const content = response?.choices?.[0]?.message?.content;
-				if (typeof content !== 'string' || !content.trim()) {
-					throw new Error($i18n.t('The model returned an empty study plan. Please try again.'));
-				}
-				return content;
-			});
+			plan = await generateStudyPlan(
+				input,
+				async (messages, maxTokens) => {
+					const response = await generateOpenAIChatCompletion(localStorage.token, {
+						model: selectedModelId,
+						stream: false,
+						params: { temperature: 0.3, max_tokens: maxTokens },
+						messages
+					});
+					const content = response?.choices?.[0]?.message?.content;
+					if (typeof content !== 'string' || !content.trim()) {
+						throw new Error($i18n.t('The model returned an empty study plan. Please try again.'));
+					}
+					return content;
+				},
+				import.meta.env.DEV
+					? (diagnostic) => console.debug('[AI Study Planner]', diagnostic)
+					: undefined
+			);
 		} catch (error) {
-			generationError = $i18n.t(error instanceof Error ? error.message : String(error));
+			if (error instanceof UnselectedStudyWeekdayError) {
+				generationError = $i18n.t(
+					'A study session was scheduled on an unselected weekday: {{weekday}} {{date}}. Selected weekday values: {{selectedDays}}. Sessions: {{sessions}}.',
+					{
+						weekday: STUDY_WEEKDAY_NAMES[error.weekday],
+						date: error.date,
+						selectedDays: error.selectedWeekdays.join(', '),
+						sessions: error.sessions
+							.map(
+								({ subject, type, duration_minutes }) =>
+									`${subject} (${type}, ${duration_minutes} min)`
+							)
+							.join('; ')
+					}
+				);
+			} else if (error instanceof StudyPlanCorrectionError) {
+				generationError = $i18n.t(
+					'The model could not produce a valid schedule after one correction attempt. {{details}}',
+					{ details: error.validationError.message }
+				);
+			} else {
+				generationError = $i18n.t(error instanceof Error ? error.message : String(error));
+			}
 		} finally {
 			generating = false;
 		}
